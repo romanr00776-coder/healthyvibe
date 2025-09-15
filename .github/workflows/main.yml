@@ -1,0 +1,35 @@
+name: Blogger to GitHub Pages
+
+on:
+  schedule:
+    - cron: '*/30 * * * *' # har 30 min me automatic run
+  workflow_dispatch: # manual run bhi kar sakte ho
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+
+    - name: Install dependencies
+      run: |
+        npm install axios fs-extra
+
+    - name: Fetch Blogger RSS feed & generate HTML
+      run: |
+        node scripts/fetchBlogger.js
+
+    - name: Commit & Push changes
+      run: |
+        git config --local user.name "github-actions[bot]"
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git add .
+        git commit -m "Update posts from Blogger"
+        git push
