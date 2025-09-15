@@ -1,17 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Redirecting...</title>
-  <!-- Redirect after 0 seconds -->
-  <meta http-equiv="refresh" content="0; url=https://www.giggiplay.online">
-  <script>
-    // Extra fallback if meta refresh fails
-    window.location.href = "https://www.giggiplay.online";
-  </script>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="2; url=https://www.giggiplay.online/">
+    <title>Redirecting to Giggiplay...</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            color: #333;
+        }
+
+        .spinner {
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
-  <p>If you are not redirected automatically, <a href="https://www.giggiplay.online">click here</a>.</p>
+    <div class="spinner"></div>
+    <h2>Redirecting to Giggiplay...</h2>
+    <p>If you are not redirected automatically, <a href="https://www.giggiplay.online/">click here</a>.</p>
 </body>
 </html>
