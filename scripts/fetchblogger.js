@@ -5,10 +5,16 @@ const fs = require("fs-extra");
 async function main() {
   try {
     // CLI argument se URL lo, warna default rakho
-    const url = process.argv[2] || "https://giggiplay.online/feeds/posts/default?alt=json";
-    
+    const url = process.argv[2] || "https://www.giggiplay.online/feeds/posts/default?alt=json";
+    console.log("Fetching from:", url);
+
     const res = await axios.get(url);
     const entries = res.data.feed.entry || [];
+
+    // Agar feed empty ho
+    if (!entries.length) {
+      console.warn("⚠️ No posts found in Blogger feed.");
+    }
 
     // HTML banate hain
     let postsList = entries.map(post => {
