@@ -1,35 +1,27 @@
-name: Blogger to GitHub Pages
+const https = require('https');
+const fs = require('fs');
 
-on:
-  schedule:
-    - cron: '*/30 * * * *' # har 30 min me automatic run
-  workflow_dispatch: # manually bhi run kar sakte ho
+const url = 'https://www.giggiplay.online/feeds/posts/default';
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+https.get(url, (res) => {
+    let data = '';
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    // Response data collect karna
+    res.on('data', (chunk) => {
+        data += chunk;
+    });
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
+    // Jab pura data aa jaye
+    res.on('end', () => {
+        // Data ko file me save karna (output.xml)
+        fs.writeFileSync('output.xml', data, 'utf8');
+        console.log('RSS feed downloaded successfully!');
+    });
 
-      - name: Install dependencies
-        run: npm install axios fs-extra
-
-      - name: Fetch Blogger RSS feed & generate HTML
-        run: node scripts/fetchBlogger.js "https://www.giggiplay.online/feeds/posts/default?alt=json"
-
-      - name: Commit & Push changes
-        run: |
-          git config --local user.name "github-actions[bot]"
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "Update posts from Blogger" || echo "No changes to commit"
-          git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+}).on('error', (err) => {
+    // Error handle karna
+    console.error('Error fetching RSS feed:', err.message);
+    // Error ko file me bhi likhna
+    fs.writeFileSync('fetchBlogger.error.log', err.stack || err.message, 'utf8');
+    process.exit(1);
+});
