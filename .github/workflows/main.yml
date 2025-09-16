@@ -1,27 +1,18 @@
-const https = require('https');
-const fs = require('fs');
+name: Run Blogger Fetch Script
 
-const url = 'https://www.giggiplay.online/feeds/posts/default';
+on: [push]
 
-https.get(url, (res) => {
-    let data = '';
+jobs:
+  fetch-blogger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repository checkout
+        uses: actions/checkout@v4
 
-    // Response data collect karna
-    res.on('data', (chunk) => {
-        data += chunk;
-    });
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-    // Jab pura data aa jaye
-    res.on('end', () => {
-        // Data ko file me save karna (output.xml)
-        fs.writeFileSync('output.xml', data, 'utf8');
-        console.log('RSS feed downloaded successfully!');
-    });
-
-}).on('error', (err) => {
-    // Error handle karna
-    console.error('Error fetching RSS feed:', err.message);
-    // Error ko file me bhi likhna
-    fs.writeFileSync('fetchBlogger.error.log', err.stack || err.message, 'utf8');
-    process.exit(1);
-});
+      - name: Run fetchblogger.js
+        run: node fetchblogger.js
