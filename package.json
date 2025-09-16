@@ -1,0 +1,9 @@
+{
+  "name": "blogger-to-github",
+  "version": "1.0.0",
+  "main": "scripts/fetchBlogger.js",
+  "dependencies": {
+    "axios": "^1.6.7",
+    "fs-extra": "^11.2.0"
+  }
+}
