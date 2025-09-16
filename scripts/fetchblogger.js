@@ -4,9 +4,10 @@ const fs = require("fs-extra");
 
 async function main() {
   try {
-    const url = "https://giggiplay.online/feeds/posts/default?alt=json";
+    // CLI argument se URL lo, warna default rakho
+    const url = process.argv[2] || "https://giggiplay.online/feeds/posts/default?alt=json";
+    
     const res = await axios.get(url);
-
     const entries = res.data.feed.entry || [];
 
     // HTML banate hain
@@ -37,7 +38,7 @@ async function main() {
 
     console.log("✅ Blogger data fetch success!");
   } catch (err) {
-    console.error("❌ Error fetching Blogger:", err);
+    console.error("❌ Error fetching Blogger:", err.message);
     process.exit(1);
   }
 }
