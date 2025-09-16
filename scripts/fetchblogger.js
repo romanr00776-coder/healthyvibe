@@ -1,52 +1,22 @@
-// scripts/fetchBlogger.js
-const axios = require("axios");
-const fs = require("fs-extra");
+const https = require('https');
+const fs = require('fs');
 
-async function main() {
-  try {
-    // CLI argument se URL lo, warna default rakho
-    const url = process.argv[2] || "https://www.giggiplay.online/feeds/posts/default?alt=json";
-    console.log("Fetching from:", url);
+const url = 'https://www.giggiplay.online/feeds/posts/default';
 
-    const res = await axios.get(url);
-    const entries = res.data.feed.entry || [];
+https.get(url, (res) => {
+    let data = '';
 
-    // Agar feed empty ho
-    if (!entries.length) {
-      console.warn("⚠️ No posts found in Blogger feed.");
-    }
+    res.on('data', (chunk) => {
+        data += chunk;
+    });
 
-    // HTML banate hain
-    let postsList = entries.map(post => {
-      const title = post.title.$t;
-      const link = post.link.find(l => l.rel === "alternate").href;
-      return `<li><a href="${link}" target="_blank">${title}</a></li>`;
-    }).join("");
+    res.on('end', () => {
+        fs.writeFileSync('output.xml', data, 'utf8');
+        console.log('RSS feed downloaded successfully!');
+    });
 
-    const html = `
-      <html>
-        <head>
-          <meta charset="UTF-8">
-          <title>Blogger Posts</title>
-        </head>
-        <body>
-          <h1>Blogger → GitHub Pages</h1>
-          <ul>
-            ${postsList}
-          </ul>
-        </body>
-      </html>
-    `;
-
-    // Save files
-    await fs.outputFile("index.html", html);
-    await fs.outputFile("data/posts.json", JSON.stringify(res.data, null, 2));
-
-    console.log("✅ Blogger data fetch success!");
-  } catch (err) {
-    console.error("❌ Error fetching Blogger:", err.message);
+}).on('error', (err) => {
+    console.error('Error fetching RSS feed:', err.message);
+    fs.writeFileSync('fetchBlogger.error.log', err.stack || err.message, 'utf8');
     process.exit(1);
-  }
-}
-
-main();
+});
