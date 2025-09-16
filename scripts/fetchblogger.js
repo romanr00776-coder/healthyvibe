@@ -4,7 +4,7 @@ const fs = require("fs-extra");
 
 async function main() {
   try {
-    const url = "https://YOURBLOGNAME.blogspot.com/feeds/posts/default?alt=json";
+    const url = "https://giggiplay.online/feeds/posts/default?alt=json";
     const res = await axios.get(url);
 
     const entries = res.data.feed.entry || [];
