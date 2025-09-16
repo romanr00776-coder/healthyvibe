@@ -10,28 +10,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20'
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
 
-    - name: Install dependencies
-      run: |
-        npm install axios fs-extra
+      - name: Install dependencies
+        run: npm install axios fs-extra
 
-    - name: Fetch Blogger RSS feed & generate HTML
-      run: |
-  node scripts/fetchBlogger.js "https://www.giggiplay.online/feeds/posts/default?alt=json"
+      - name: Fetch Blogger RSS feed & generate HTML
+        run: node scripts/fetchBlogger.js "https://www.giggiplay.online/feeds/posts/default?alt=json"
 
-    - name: Commit & Push changes
-      run: |
-        git config --local user.name "github-actions[bot]"
-        git config --local user.email "github-actions[bot]@users.noreply.github.com"
-        git add .
-        git commit -m "Update posts from Blogger" || echo "No changes to commit"
-        git push
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit & Push changes
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Update posts from Blogger" || echo "No changes to commit"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
