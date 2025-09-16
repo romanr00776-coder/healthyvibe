@@ -24,7 +24,7 @@ jobs:
 
     - name: Fetch Blogger RSS feed & generate HTML
       run: |
-        node scripts/fetchBlogger.js "https://www.giggiplay.online/feeds/posts/default?alt=rss"
+  node scripts/fetchBlogger.js "https://www.giggiplay.online/feeds/posts/default?alt=json"
 
     - name: Commit & Push changes
       run: |
